@@ -10,6 +10,6 @@ class Category extends Model
 
     //Relacion de uno a muchos
     public function posts(){
-    	return $this->hashMany('App\Post');
+    	return $this->hasMany('App\Post');
     }
 }
