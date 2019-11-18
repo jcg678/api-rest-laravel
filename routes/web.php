@@ -27,3 +27,21 @@ Route::get('/prueba', function () {
 Route::get('pruebas/animales', 'PruebasController@index');
 
 Route::get('test', 'PruebasController@testOrm');
+
+
+
+
+
+
+//RUTAS API
+
+Route::get('/usuario/pruebas','UserController@pruebas');
+
+Route::get('/categoria/pruebas','CategoryController@pruebas');
+
+Route::get('/entradas/pruebas','PostController@pruebas');
+
+
+
+Route::post('/api/register','UserController@register');
+Route::post('/api/login','UserController@login');
