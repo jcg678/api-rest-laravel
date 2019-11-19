@@ -11,26 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
-Route::get('/prueba', function () {
-    
-    return view('prueba', array(
-    	'texto' => 'HOLAAAA'
-    ));
-});
-
-
-Route::get('pruebas/animales', 'PruebasController@index');
-
-Route::get('test', 'PruebasController@testOrm');
-
-
-
-
+Route::get('/','PostController@initApi');
 
 
 //RUTAS API

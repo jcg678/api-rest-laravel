@@ -11,5 +11,7 @@ class PostController extends Controller
     }
 
 
-
+    public function initApi(Request $request){
+    	return 'Welcome api beta';
+    }
 }
