@@ -67,12 +67,6 @@ class UserController extends Controller
 		    		'message' => 'Los datos enviados no son correctos'
 		    	);
 	    }	
-    	//cifrar contraseña
-
-    	//comprobar si el usuario existe
-    	//crear el usuario
-
-
 
 
     	return response()->json($data, $data['code']);
@@ -80,6 +74,9 @@ class UserController extends Controller
     }
 
     public function login(Request $request){
+		$jwtAuth = new \JwtAuth();
+		echo $jwtAuth->signup();
+
     	return 'Accion login usuarios';
     }
 
