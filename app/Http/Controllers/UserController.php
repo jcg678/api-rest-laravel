@@ -74,13 +74,38 @@ class UserController extends Controller
     }
 
     public function login(Request $request){
-		$email = 'uno2@uno.com';
-		$password = 'uno';
-		$pwd =hash('sha256',$password);
 
-		$jwtAuth = new \JwtAuth();
+		$json = $request->input('json',null);
+		$params = json_decode($json);
+		$params_array =json_decode($json,true);
 
-    	return  response()->json($jwtAuth->signup($email,$pwd, true), 200);
+		$validate = \Validator::make($params_array,[
+			'email'=>'required|email',
+			'password'=>'required'
+		]);
+
+
+
+		if($validate->fails()){
+			$signup = array(
+				'status'=>'error',
+				'code' => 404,
+				'message' => 'El usuario no se podido loguear',
+				'errors'=> $validate->errors()
+			);
+		}else{
+			$pwd =hash('sha256',$params->password);
+			$jwtAuth = new \JwtAuth();
+			$signup = $jwtAuth->signup($params->email,$pwd);
+
+			if(!empty($params->gettoken)){
+				$signup = $jwtAuth->signup($params->email,$pwd, true);
+			}
+		}
+
+
+
+    	return  response()->json($signup, 200);
     }
 
 }
