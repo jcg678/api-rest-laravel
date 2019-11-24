@@ -153,4 +153,14 @@ class UserController extends Controller
 		return response()->json($data,$data['code']);
 	}
 
+
+	public function upload(Request $resuest){
+		$data= array(
+			'code'=>404,
+			'status'=>'error',
+			'message'=> 'El usuario no esta identicado'
+		);
+
+		return response($data, $data['code'])->header('Content-Type', 'text/plain');
+	}
 }
