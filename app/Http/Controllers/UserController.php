@@ -158,9 +158,9 @@ class UserController extends Controller
 		$data= array(
 			'code'=>404,
 			'status'=>'error',
-			'message'=> 'El usuario no esta identicado'
+			'message'=> 'Error al subir imagen'
 		);
 
-		return response($data, $data['code'])->header('Content-Type', 'text/plain');
+		return response()->json($data, $data['code']);
 	}
 }
