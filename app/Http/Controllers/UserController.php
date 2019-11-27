@@ -157,7 +157,18 @@ class UserController extends Controller
 	public function upload(Request $resuest){
 		$image = $resuest->file('file0');
 
-		if($image){
+		$validate = \Validator::make($resuest->all(),[
+			'file0'=>'required|image|mimes:jpg,jpeg,png,gif'
+		]);
+
+		if(!$image || $validate->fails()){
+			$data= array(
+				'code'=>404,
+				'status'=>'error',
+				'message'=> 'Error al subir imagen'
+			);
+
+		}else{
 			$image_name = time().$image->getClientOriginalName();
 			\Storage::disk('users')->put($image_name, \File::get($image));
 
@@ -165,13 +176,6 @@ class UserController extends Controller
 				'code'=>200,
 				'status'=>'success',
 				'image'=>$image_name
-			);
-
-		}else{
-			$data= array(
-				'code'=>404,
-				'status'=>'error',
-				'message'=> 'Error al subir imagen'
 			);
 		}
 
