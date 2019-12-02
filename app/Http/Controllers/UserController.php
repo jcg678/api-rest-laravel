@@ -39,7 +39,7 @@ class UserController extends Controller
 		    		'errors'=> $validate->errors()
 		    	);
 
-	    	
+
 	    	}else{
 
 	    		$pwd =hash('sha256',$params->password);
@@ -67,7 +67,7 @@ class UserController extends Controller
 		    		'code' => 400,
 		    		'message' => 'Los datos enviados no son correctos'
 		    	);
-	    }	
+	    }
 
 
     	return response()->json($data, $data['code']);
@@ -198,4 +198,24 @@ class UserController extends Controller
 			return response()->json($data, $data['code']);
 		}
 	}
+
+	public function detail($id){
+        $user = User::find($id);
+
+        if(is_object($user)){
+            $data = array(
+              'code'=>200,
+              'status'=>'success',
+              'user'=>$user
+            );
+        }else{
+            $data = array(
+                'code'=>404,
+                'status'=>'error',
+                'message'=>'El usuario no existe'
+            );
+        }
+
+        return response()->json($data, $data['code']);
+    }
 }
