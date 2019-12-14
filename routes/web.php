@@ -14,14 +14,6 @@ use App\Http\Middleware\ApiAuthMiddleware;
 Route::get('/','PostController@initApi');
 
 
-//RUTAS API
-
-Route::get('/usuario/pruebas','UserController@pruebas');
-
-Route::get('/categoria/pruebas','CategoryController@pruebas');
-
-Route::get('/entradas/pruebas','PostController@pruebas');
-
 
 
 Route::post('/api/register','UserController@register');
@@ -33,3 +25,8 @@ Route::post('/api/user/upload', 'UserController@Upload')->middleware(ApiAuthMidd
 Route::get('api/user/avatar/{filename}','UserController@getImage');
 
 Route::get('api/user/detail/{id}','UserController@detail');
+
+
+//Categorias
+Route::resource('/api/category', 'CategoryController');
+
