@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Helpers\JwtAuth;
 
 class PostController extends Controller
 {
@@ -38,6 +39,56 @@ class PostController extends Controller
               'post' => $post
             ];
         }
+        return response()->json($data,$data['code']);
+    }
+
+    public function store(Request $request){
+        $json = $request->input('json',null);
+        $params = json_decode($json);
+        $params_array = json_decode($json,true);
+
+        if(!empty($params_array)){
+            $jwtAuth = new JwtAuth();
+            $token = $request->header('Authorization',null);
+            $user = $jwtAuth->checkToken($token, true);
+
+            $validate = \Validator::make($params_array,[
+               'title' => 'required',
+                'content'=>'required',
+                'category_id'=>'required',
+                'image'=>'required'
+            ]);
+
+            if($validate->fails()){
+                $data = [
+                    'code' => 400,
+                    'status'=>'error',
+                    'message'=>'No se ha guardado el post, faltan datos'
+                ];
+            }else{
+                $post = new Post();
+                $post->user_id = $user->sub;
+                $post->category_id = $params->category_id;
+                $post->content = $params->content;
+                $post->title = $params->title;
+                $post->image = $params->image;
+                $post->save();
+
+                $data = [
+                    'code' => 200,
+                    'status'=>'success',
+                    'post'=>$post
+                ];
+            }
+
+        }else{
+            $data = [
+                'code' => 400,
+                'status'=>'error',
+                'message'=>'Envia los datos correctamene'
+            ];
+        }
+
         return response()->json($data,$data['code']);
     }
 }
