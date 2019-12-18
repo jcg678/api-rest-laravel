@@ -118,13 +118,13 @@ class PostController extends Controller
             unset($params_array['user_id']);
             unset($params_array['created_at']);
             unset($params_array['user']);
-
             $post = Post::where('id',$id)->update($params_array);
-
+            $post =Post::where('id',$id)->get();
             $data = array(
                 'code'=>200,
                 'status'=>'success',
-                'post'=>$params_array
+                'post'=>$post,
+                'changes'=>$params_array
             );
         }
 
