@@ -130,4 +130,25 @@ class PostController extends Controller
 
         return response()->json($data,$data['code']);
     }
+
+    public function destroy($id,Request $request){
+        $post = Post::find($id);
+
+
+        $data = array(
+            'code'=>400,
+            'status'=>'error',
+            'message'=>'no existe',
+        );
+        if(!empty($post)){
+        $post->delete();
+
+        $data = array(
+            'code'=>200,
+            'status'=>'success',
+            'post'=>$post,
+        );
+        }
+        return response()->json($data,$data['code']);
+    }
 }
