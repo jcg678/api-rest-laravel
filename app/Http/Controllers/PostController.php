@@ -48,9 +48,7 @@ class PostController extends Controller
         $params_array = json_decode($json,true);
 
         if(!empty($params_array)){
-            $jwtAuth = new JwtAuth();
-            $token = $request->header('Authorization',null);
-            $user = $jwtAuth->checkToken($token, true);
+            $user = $this->getIdentity($request);
 
             $validate = \Validator::make($params_array,[
                'title' => 'required',
@@ -93,6 +91,8 @@ class PostController extends Controller
     }
 
     public function update($id, Request $request){
+
+
         $json = $request->input('json',null);
         $params_array = json_decode($json, true);
 
@@ -118,23 +118,37 @@ class PostController extends Controller
             unset($params_array['user_id']);
             unset($params_array['created_at']);
             unset($params_array['user']);
-            $post = Post::where('id',$id)->update($params_array);
-            $post =Post::where('id',$id)->get();
-            $data = array(
-                'code'=>200,
-                'status'=>'success',
-                'post'=>$post,
-                'changes'=>$params_array
-            );
+
+            $user = $this->getIdentity($request);
+
+            $post = Post::where('id',$id)->where('user_id',$user->sub)->first();
+
+            if(!empty($post) && is_object($post)){
+
+                $post->update($params_array);
+
+                $data = array(
+                    'code'=>200,
+                    'status'=>'success',
+                    'post'=>$post,
+                    'changes'=>$params_array
+                );
+            }
+            /*$where =[
+                'id'=>$id,
+                'user_id'=>$user->sub
+            ];
+            $post = Post::updateOrCreate($where, $params_array);*/
+
         }
 
         return response()->json($data,$data['code']);
     }
 
     public function destroy($id,Request $request){
-        $post = Post::find($id);
+        $user = $this->getIdentity($request);
 
-
+        $post = Post::where('id',$id)->where('user_id',$user->sub)->first();
         $data = array(
             'code'=>400,
             'status'=>'error',
@@ -150,5 +164,12 @@ class PostController extends Controller
         );
         }
         return response()->json($data,$data['code']);
+    }
+
+    private function getIdentity(Request $request){
+        $jwtAuth = new JwtAuth();
+        $token = $request->header('Authorization',null);
+        $user = $jwtAuth->checkToken($token, true);
+        return $user;
     }
 }
